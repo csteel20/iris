@@ -9,6 +9,6 @@ class IRISServer {
   			res.writeHead(200, {'Content-Type': 'text/plain'});
   			res.end('Example Page\n');
 		}).listen(port, '127.0.0.1');
-		console.log('IRIS Server running on port'+port);
+		console.log('IRIS Server running on port '+port);
 	}
 }
