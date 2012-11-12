@@ -1,4 +1,4 @@
-class QAElement{
+export class QAElement{
  	_positionX:number = 0;
 	_positionY:number = 0;
 	_width:number = 0;
