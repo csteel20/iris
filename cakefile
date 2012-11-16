@@ -1,0 +1,48 @@
+
+#   Includes
+#===========================================================================================>
+fs     = require 'fs'
+{exec} = require 'child_process'
+
+
+
+#   Files for Client Compress
+#===========================================================================================>
+buildFiles  = [
+  'client/QAElement'
+  'client/IRISClient'
+]
+
+#   TASK : Build Client
+#===========================================================================================>
+
+task 'client:build', 'Build Client from all source files', ->
+  appContents = new Array remaining = buildFiles.length
+  for file, index in buildFiles then do (file, index) ->
+    fs.readFile "server/com/#{file}.coffee", 'utf8', (err, fileContents) ->
+      throw err if err
+      appContents[index] = fileContents
+      process() if --remaining is 0
+  process = ->
+    fs.writeFile './server/build/assets/js/app.coffee', appContents.join('\n\n'), 'utf8', (err) ->
+      throw err if err
+      exec 'coffee --compile ./server/build/assets/js/app.coffee', (err, stdout, stderr) ->
+        throw err if err
+        console.log stdout + stderr
+        fs.unlink './server/build/assets/js/app.coffee', (err) ->
+          throw err if err
+          console.log 'Client build complete!'
+
+task 'client:watch', 'Watches Client Files', ->
+  console.log "Watching client files. Ctrl + C to cancel.."
+  #for file, index in buildFiles then do (file, index) ->
+    #console.log "./server/com/#{file}.coffee"
+   # fs.exists "./server/com/#{file}.coffee", () ->
+  fs.watch './server/com/client/IRISClient.coffee', {persistent:true}, () ->
+    exec 'cake client:build'
+
+
+
+
+
+
